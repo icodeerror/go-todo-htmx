@@ -67,7 +67,3 @@ func getTodo(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte(urlVal))
 }
-
-func markAsCompleted(w http.ResponseWriter, r *http.Request) {
-	id := r.Url
-}
