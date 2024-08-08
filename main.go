@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+
+	"github.com/icodeerror/go-todo-htmx/internal/config"
 )
 
 type Todos struct {
@@ -18,6 +20,8 @@ func main() {
 
 	srv.HandleFunc("GET /{$}", homeHandler)
 	srv.HandleFunc("GET /todo/{id}", getTodo)
+
+	_ = config.Conn
 
 	fmt.Println("Server is starting on http://localhost:8000")
 	err := http.ListenAndServe(":8000", srv)
