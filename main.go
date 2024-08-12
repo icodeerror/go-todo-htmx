@@ -2,72 +2,55 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 
 	"github.com/icodeerror/go-todo-htmx/internal/config"
+	"github.com/icodeerror/go-todo-htmx/internal/models"
 )
 
-type Todos struct {
-	ID          int
-	Description string
-	Completed   bool
+type app struct {
+	todoModel models.TodosModel
+	// templateCache map[string]*template.Template
 }
+
+// type Todos struct {
+// 	ID          int
+// 	Description string
+// 	Completed   bool
+// }
 
 func main() {
 	srv := http.NewServeMux()
 
-	srv.HandleFunc("GET /{$}", homeHandler)
-	srv.HandleFunc("GET /todo/{id}", getTodo)
-
-	_ = config.Conn
-
-	fmt.Println("Server is starting on http://localhost:8000")
-	err := http.ListenAndServe(":8000", srv)
+	pool, db, err := config.OpenDB()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer pool.Close()
+	defer db.Release()
 
-}
+	// templateCache, err := newTemplateCache()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	// t, err := template.ParseFiles("./web/base.html", "./web/index.html")
-	todos := []Todos{
-		{
-			ID:          1,
-			Description: "Buy something now",
-			Completed:   false,
-		},
-		{
-			ID:          2,
-			Description: "Buy something later",
-			Completed:   false,
-		},
-		{
-			ID:          3,
-			Description: "Buy something please",
-			Completed:   true,
-		},
+	app := app{
+		todoModel: models.TodosModel{DB: db},
+		// templateCache: templateCache,
 	}
 
-	t, err := template.ParseGlob("./web/*.html")
+	srv.HandleFunc("GET /{$}", app.homeHandler)
+	srv.HandleFunc("PATCH /todo/{id}/complete", restrictDirectAccessHTMX(app.markCompleteHandler))
+	srv.HandleFunc("GET /todo/{id}", restrictDirectAccessHTMX(app.getEditTodoHandler))
+	srv.HandleFunc("GET /todo/{id}/cancel", restrictDirectAccessHTMX(app.cancelUpdate))
+	srv.HandleFunc("PATCH /todo/{id}/update", restrictDirectAccessHTMX(app.updateDescriptionHandler))
+	srv.HandleFunc("POST /todo", restrictDirectAccessHTMX(app.addTodoHandler))
+	srv.HandleFunc("DELETE /todo/{id}/delete", restrictDirectAccessHTMX(app.deleteTodoHandler))
+
+	fmt.Println("Server is starting on http://localhost:8000")
+	err = http.ListenAndServe(":8000", bypassLocalTunnel(srv))
 	if err != nil {
-		fmt.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		log.Fatal(err)
 	}
-
-	err = t.ExecuteTemplate(w, "base", todos)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
-
-func getTodo(w http.ResponseWriter, r *http.Request) {
-
-	urlVal := r.PathValue("id")
-
-	w.Write([]byte(urlVal))
 }
