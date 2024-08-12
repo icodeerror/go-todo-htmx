@@ -10,7 +10,7 @@ This project is using the following pkg.
 - [godotenv](https://github.com/joho/godotenv "godotenv") - A Go port of Ruby's dotenv library (Loads environment variables from .env files)
 
 ##### How to run
-1. Add the following key to your `.env` file.
+1. Add the following keys to your `.env` file.
 ```
 DB_USER
 DB_PASSWORD
