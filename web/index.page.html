@@ -1,0 +1,66 @@
+{{ define "title" }}Home{{ end }}
+
+{{ define "content" }}
+<nav class="panel is-link is-outlined mt-5" id="content">
+  <p class="panel-heading">Go Todo with HTMX</p>
+  <article class="message is-warning mb-2">
+    <div class="message-header">
+      <p>How to use</p>
+    </div>
+    <div class="message-body content is-small">
+      <ul>
+        <li>Fill in the empty field, then hit enter to add a new todo.</li>
+        <li>Click on 'All', 'Incomplete', 'Completed' to filter the list.</li>
+        <li>Double click on the item to mark complete.</li>
+        <li>Click edit to change the description.</li>
+        <li>Click delete to delete a todo.</li>
+      </ul>
+    </div>
+  </article>
+  <div class="panel-block is-flex">
+    <form class="is-flex-grow-1" hx-post="/todo" hx-swap="outerHTML" hx-target="#todos" hx-trigger="keyup[keyCode==13]"
+      onsubmit="event.preventDefault();" hx-on::after-request="this.reset()">
+      <p class=" control has-icons-left">
+        <input class="input" type="text" name="description" placeholder="Go to supermarket" />
+        <span class="icon is-left">
+          <i class="fas fa-plus" aria-hidden="true"></i>
+        </span>
+      </p>
+    </form>
+  </div>
+  <!-- <p class="panel-tabs">
+    <a>All</a>
+    <a>Pending</a>
+    <a>Completed</a>
+  </p> -->
+  <div id="todos">
+    {{ range .}}
+    <div class="is-flex">
+      <a class="panel-block is-flex-grow-1" id="todo-{{ .ID }}" hx-trigger="dblclick"
+        hx-patch="/todo/{{ .ID }}/complete" hx-swap="outerHTML">
+        <span class="panel-icon">
+          {{ if .Completed }}
+          <i class="fas fa-check" aria-hidden="true"></i>
+          {{ else }}
+          <i class="fas fa-times" aria-hidden="true"></i>
+          {{ end }}
+        </span>
+        <div id="description-{{ .ID }}">
+          {{ .Description }}
+        </div>
+      </a>
+      <div class="is-flex is-align-items-center buttons are-small mr-4" id="edit-{{ .ID }}">
+        <button class="button is-warning is-outlined" hx-get="/todo/{{ .ID }}">
+          Edit
+        </button>
+        <button class="button is-danger is-outlined" hx-delete="/todo/{{ .ID }}/delete" hx-swap="outerHTML"
+          hx-target="#todos" hx-confirm="Proceed to delete {{ .Description }}?">
+          Delete
+        </button>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+
+</nav>
+{{ end }}

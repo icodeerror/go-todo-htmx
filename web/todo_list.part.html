@@ -1,0 +1,28 @@
+<div id="todos">
+  {{ range .}}
+  <div class="is-flex">
+    <a class="panel-block is-flex-grow-1" id="todo-{{ .ID }}" hx-trigger="dblclick" hx-patch="/todo/{{ .ID }}/complete"
+      hx-swap="outerHTML">
+      <span class="panel-icon">
+        {{ if .Completed }}
+        <i class="fas fa-check" aria-hidden="true"></i>
+        {{ else }}
+        <i class="fas fa-times" aria-hidden="true"></i>
+        {{ end }}
+      </span>
+      <div id="description-{{ .ID }}">
+        {{ .Description }}
+      </div>
+    </a>
+    <div class="is-flex is-align-items-center buttons are-small mr-4" id="edit-{{ .ID }}">
+      <button class="button is-warning is-outlined" hx-get="/todo/{{ .ID }}">
+        Edit
+      </button>
+      <button class="button is-danger is-outlined" hx-delete="/todo/{{ .ID }}/delete" hx-swap="outerHTML"
+        hx-target="#todos" hx-confirm="Proceed to delete {{ .Description }}?">
+        Delete
+      </button>
+    </div>
+  </div>
+  {{ end }}
+</div>

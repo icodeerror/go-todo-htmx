@@ -1,0 +1,41 @@
+{{ define "base" }}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ template "title" .}}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.1/htmx.min.js"
+    integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+  <section class="container mb-5 mt-1">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        {{ template "content" .}}
+      </div>
+    </div>
+  </section>
+  <footer class="footer py-4">
+    <div class="content has-text-centered">
+      <p><a href="https://github.com/icodeerror/go-todo-htmx/" class="has-text-black"><i
+            class="fa-brands fa-github"></i></a>
+        • Built with <a href="https://go.dev/"><i class="fa-brands fa-golang is-large"></i></a>, <a
+          href="https://htmx.org/">HTMX</a> and <a href="https://bulma.io">Bulma</a>. </p>
+      <p><a href="https://www.buymeacoffee.com/taidy" target="_blank"><img
+            src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Pizza"
+            style="height:60px !important;width:217px !important;"></a></p>
+    </div>
+  </footer>
+</body>
+
+</html>
+
+{{ end }}

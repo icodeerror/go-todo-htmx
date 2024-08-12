@@ -1,0 +1,17 @@
+<form hx-patch="/todo/{{ .ID }}/update" class="is-flex-grow-1" id="description-{{ .ID }}" hx-swap-oob="true"
+  hx-target="#description-{{ .ID }}">
+  <input type="text" class="input is-small" spellcheck="false" name="description" data-ms-editor="true"
+    value="{{ .Description }}" />
+</form>
+
+<!-- <div class="is-flex is-align-items-center" id="edit-{{ .ID }}" hx-swap-oob="afterbegin:#edit-{{ .ID }}"> -->
+<div class="is-flex is-align-items-center buttons are-small mr-4" id="edit-{{ .ID }}" hx-swap-oob="true">
+  <!-- <input type="submit" class="button is-small" value="Save" form="description-{{ .ID }}" /> -->
+  <button type="submit" class="button is-success is-outlined" form="description-{{ .ID }}">
+    Save
+  </button>
+  <button class="button" hx-get="/todo/{{ .ID }}/cancel">
+    Cancel
+  </button>
+</div>
+<!-- </form> -->

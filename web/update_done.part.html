@@ -1,0 +1,12 @@
+<div id="description-{{ .ID }}" hx-swap-oob="true">
+  {{ .Description }}
+</div>
+<div class="is-flex is-align-items-center buttons are-small mr-4" id="edit-{{ .ID }}" hx-swap-oob="true">
+  <button class="button is-warning is-outlined" hx-get="/todo/{{ .ID }}">
+    Edit
+  </button>
+  <button class="button is-danger is-outlined" hx-delete="/todo/{{ .ID }}/delete" hx-swap="outerHTML" hx-target="#todos"
+    hx-confirm="Proceed to delete {{ .Description }}?">
+    Delete
+  </button>
+</div>
