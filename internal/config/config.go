@@ -10,7 +10,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var Conn *pgxpool.Conn
+// var Conn *pgxpool.Conn
 
 // type database struct {
 // 	User     string
@@ -20,11 +20,11 @@ var Conn *pgxpool.Conn
 // 	Name     string
 // }
 
-func init() {
-	Conn = openDB()
-}
+// func init() {
+// 	Conn = openDB()
+// }
 
-func openDB() *pgxpool.Conn {
+func OpenDB() (*pgxpool.Pool, *pgxpool.Conn, error) {
 
 	err := godotenv.Load()
 	if err != nil {
@@ -43,24 +43,38 @@ func openDB() *pgxpool.Conn {
 
 	if err != nil {
 		log.Fatal("Cannot connect to the database")
+		return nil, nil, err
 	}
 
-	defer pool.Close()
+	// defer pool.Close()
 
 	conn, err := pool.Acquire(context.Background())
 	if err != nil {
 		log.Fatal("Failed to acquire connection")
+		return nil, nil, err
 	}
 
-	defer conn.Release()
+	// defer conn.Release()
 
 	err = conn.Ping(context.Background())
+	if err != nil {
+		log.Println("Ping", err)
+		log.Fatal(err)
+	}
+
+	query := `
+						CREATE TABLE IF NOT EXISTS todos(
+						id SERIAL PRIMARY KEY,
+						description TEXT NOT NULL,
+						completed BOOLEAN NOT NULL
+						)
+					`
+
+	_, err = conn.Exec(context.Background(), query)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// conn.Close()
-
-	return conn
+	return pool, conn, nil
 
 }
