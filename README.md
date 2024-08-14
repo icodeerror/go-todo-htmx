@@ -5,7 +5,7 @@ I hate spending time with frontend things. I wanted to improve and broaden my kn
 ------------
 
 
-This project is using the following pkg.
+This project depends on the following packages
 - [pgx](https://github.com/jackc/pgx "PGX") - PostgreSQL Driver and Toolkit
 - [godotenv](https://github.com/joho/godotenv "godotenv") - A Go port of Ruby's dotenv library (Loads environment variables from .env files)
 
